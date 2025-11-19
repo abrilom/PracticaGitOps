@@ -1,0 +1,9 @@
+terraform/.terraform               
+terraform/terraform.tfstate  
+terraform/terraform.tfstate.backup
+terraform/.terraform.lock.hcl
+.aws/
+terraform/abril-key
+terraform/abril-key.pub
+ansible/abril-key
+

@@ -1,0 +1,6 @@
+- name: Install apache y php en las ec2 del autoescaling group
+  hosts: role_ec2
+  become: true
+
+  roles:
+    - ec2
