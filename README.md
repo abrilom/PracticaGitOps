@@ -37,6 +37,8 @@ Dicha infraestructura incluye:
 │       └── workflow.yml        # Pipeline CI/CD
 └── README.md 
 
+```
+
 ## Pipeline CI/CD
 El pipeline de GitHub Actions realiza los siguientes pasos:
 
