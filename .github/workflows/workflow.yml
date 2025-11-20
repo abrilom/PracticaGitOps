@@ -81,6 +81,6 @@ jobs:
       - name: Ansible playbook
         run: |
           cd ansible
-          ansible-playbook site.yml -i aws_ec2.yml
+          ansible-playbook site.yml -i aws_ec2.yml --private-key ~/.ssh/id_rsa 
 
 
