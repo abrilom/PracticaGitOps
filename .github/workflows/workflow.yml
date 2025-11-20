@@ -1,0 +1,93 @@
+name: Infraestructure CI/CD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id:${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key:${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:${{ secrets.AWS_REGION }}
+
+      - name: SetUp terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          aws-access-key-id:${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key:${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:${{ secrets.AWS_REGION }}
+
+      - name: SetUp terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: "1.13.4"
+
+      - name: Verify Terraform instalation
+        run: terraform version
+
+      - name: Terraform init
+        run: |
+          cd terraform
+          terraform init
+
+      - name: Terraform validate
+        run: |
+          cd terraform
+          terraform validate
+      - name: Terraform plan
+        run: |
+          cd terraform
+          terraform plan -out=tfplan
+
+      - name: Terraform apply
+        run: |
+          cd terraform
+          terraform apply -auto-approve tfplan
+
+  ansible:
+    name: Ansible
+    runs-on: ubuntu-latest
+    needs: terraform
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Ansible and dependencies
+        run: |
+          sudo python3 -m pip install     
+          sudo pip install ansible boto3 botocore
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id:${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key:${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:${{ secrets.AWS_REGION }}
+
+      - name: Configure SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Validate ansible playbook and inventory
+        run: |
+          cd ansible
+          ansible-playbook site.yml --syntax-check
+          ansible-inventory -i aws_ec2.yml --list
+
+      - name: Ansible playbook
+        run: |
+          cd ansible
+          ansible-playbook site.yml -i aws_ec2.yml
+
+
