@@ -56,7 +56,7 @@ jobs:
 
       - name: Install Ansible and dependencies
         run: |
-          sudo python3 -m pip install --upgrade pip
+          sudo yum install -y python3-pip
           sudo pip3 install ansible boto3 botocore
 
       - name: Configure AWS Credentials
