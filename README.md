@@ -3,11 +3,11 @@
 Este proyecto implementa una arquitectura de alta disponibilidad en AWS mediante la integración de Terraform y Ansible.
 Dicha infraestructura incluye:
  
-	- **Application Load Balancer (ALB)** para balancear el tráfico
-	- **AutoScaling Group (ASG)** con mínimo 2 y máximo 4 instancias EC2 en subredes públicas 
-	- Base de datos **RDS PostgresSQL** en una subred privada
-	- Un **NAT Gateway** para permitir las actualizaciones de la RDS
-	- **Pipelie de CI/CD** con GitHub Actions que automatiza la creación y configuración de la infraestructura
+	- Application Load Balancer (ALB) para balancear el tráfico
+	- AutoScaling Group (ASG) con mínimo 2 y máximo 4 instancias EC2 en subredes públicas 
+	- Base de datos RDS PostgresSQL en una subred privada
+	- Un NAT Gateway para permitir las actualizaciones de la RDS
+	- Pipelie de CI/CD con GitHub Actions que automatiza la creación y configuración de la infraestructura
 
 ## Requisitos previos
 	- Cuenta de AWS con permisos para crear VPC, subnets, ALB, EC2, ASG, RDS y NAT
@@ -42,28 +42,28 @@ Dicha infraestructura incluye:
 ## Pipeline CI/CD
 El pipeline de GitHub Actions realiza los siguientes pasos:
 
-	1. **Configura el sistema**
+	1. Configura el sistema
 		- Comprueba que se tienen todas las dependencias instaladas
 		- Configura las credenciales de AWS
 		- Configura las llaves SSH
  
-	2. **Valida el código**
+	2. Valida el código
 		- Comprueba la syntaxis (terraform validate, ansible-playbook --syntax-check)
 
-	3. **Crea la infraestructura**
+	3. Crea la infraestructura
 		- terraform init --> Inicializa terraform
 		- terraform plan --> Genera el plan de ejecución
 		- terraform apply --> Aplica los cambios del plan en AWS
 
-	4. **Configura las instancias EC2**
+	4. Configura las instancias EC2
 		- ansible-playbook --> Ansible configura las instancias EC2 usando la SSH guardada como secreto
 
 El workflow se ejecuta manualmente usando workflow_dispatch 
 
 ## Ejecución manual del workflow
-	1. Ve a la pestaña **Actions** del repositorio de GitHub
-	2. Selecciona el workflow **Infraestructure CI/CD**
-	3. Haz click en **Run workflow**
+	1. Ve a la pestaña Actions del repositorio de GitHub
+	2. Selecciona el workflow Infraestructure CI/CD
+	3. Haz click en Run workflow
 	4. GitHub Actions ejecutará Terraform y Ansible de manera secuencial
 
 
