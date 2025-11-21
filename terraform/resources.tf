@@ -250,15 +250,6 @@ resource "aws_launch_template" "abril_ec2" {
     associate_public_ip_address = true
   }
 
-  user_data = base64encode(<<-EOF
-#!/bin/bash
-apt-get update -y
-apt-get install -y apache2
-systemctl enable apache2
-systemctl start apache2
-EOF
-  )
-
 tag_specifications {
     resource_type = "instance"
     tags = {
@@ -365,5 +356,6 @@ resource "aws_key_pair" "abril_key" {
   public_key = file("./abril-key.pub")
   
 }
+
 
 
